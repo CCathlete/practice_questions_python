@@ -1,0 +1,21 @@
+# What's a spanning tree? a tree is a connected undirected graph with no cycles. 
+    A spanning tree has all vertices of its original graph.
+
+# What's the minimal number of edges in a connected graph?
+
+# A minimum spanning tree always has all N vertices (nodes) and N-1 edges.
+
+# What's Kruskal's algorithm? a greedy algo to find the minimal spanning tree of a graph (MST).
+    1. you start with removing parallel edges that have higher weights and loops.
+    2. now that you have only one edge between two vertices, 
+        write all edges, from lowest weight to highest weight.
+    3. draw all vertices.
+    4. starting from lowest weight, add edges from the list.
+    5. there shouldn't be more than one way to get from one 
+        node to another, cycles are not allowed.
+
+# What's Dijkstra's algorithm?
+
+# What's Prim's algorithm?
+
+# What's a hamiltonian cycle?
