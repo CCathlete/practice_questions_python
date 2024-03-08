@@ -1,4 +1,4 @@
-
+from typing import Self
 """Consider a car with a max fuel capacity of n litres. Two infinite-
 capacity containers are available, one containing petrol and the other 
 containing diesel. Each move allows you to transfer a (variable) litres 
@@ -19,16 +19,15 @@ achievable fuel amount in the car.
 -- We want to reach as close to n by steps of adding a or b.
 """
 class tank:
-    def __init__(self, capacity:int):
+    def __init__(self, capacity:int=0):
         self.currently_in = 0
         self.capacity = capacity
-        self.half_quantity_flag
+        self.half_quantity_flag = False
 
     def put_fuel(self, amount_to_put_in:int) -> bool:
         if amount_to_put_in > self.capacity:
             return False
         else:
-            self.capacity -= amount_to_put_in
             self.currently_in += amount_to_put_in
         return True
             
@@ -38,19 +37,30 @@ class tank:
             self.half_quantity_flag = True
 
     def decide_which_fuel(self, petrol_amount:int, diesel_amount:int) -> str:
-        cap = self.capacity
-        take_petrol = cap-petrol_amount >= 0 and\
-            cap-petrol_amount < cap-diesel_amount
-        take_diesel = cap-diesel_amount >= 0 and\
-            cap-petrol_amount >= cap-diesel_amount
-        # If we can't fill with petrol nor with diesel
-        # the func returns 'neither'.
-        if not take_petrol and not take_diesel:
-            return 'neither'
-        if take_petrol:
+        effective_cap = self.capacity - self.currently_in
+        is_petrol_possible = effective_cap-petrol_amount >= 0
+        is_diesel_possible = effective_cap-diesel_amount >= 0
+        petrol_is_better = \
+            effective_cap-petrol_amount < effective_cap-diesel_amount
+        # If both are possible, we take the one that fills the tank
+        # more. If only one is possible, we return its name.
+        if is_petrol_possible and is_diesel_possible:
+            if petrol_is_better:
+                return 'petrol'
+            else:
+                return 'diesel'
+        elif is_petrol_possible:
             return 'petrol'
-        if take_diesel:
+        elif is_diesel_possible:
             return 'diesel'
+        else:
+            return 'neither'
+        
+    def return_a_copy(self, empty_instance:Self) -> Self:
+        empty_instance.capacity = self.capacity
+        empty_instance.currently_in = self.currently_in 
+        # Now it's not empty.
+        return empty_instance
 
 
 class Solution:
@@ -65,12 +75,32 @@ class Solution:
             # During the following condition the quantity will definitely 
             # change unless we've reached the max amount possible.
             if which_fuel == 'neither':
-               tanky.half_quantity()
+                if not tanky.half_quantity_flag:
+                    temp_tanky = tanky.return_a_copy(empty_instance=tank())
+                temp_tanky.half_quantity()
+                which_fuel = temp_tanky.decide_which_fuel(petrol_amount=A, 
+                                                          diesel_amount=B) 
+                if(which_fuel == 'petrol'):
+                    temp_tanky.put_fuel(A)
+                elif(which_fuel == 'diesel'):
+                    temp_tanky.put_fuel(B)
+                if tanky.currently_in < temp_tanky.currently_in:
+                    tanky = temp_tanky
             elif(which_fuel == 'petrol'):
                 tanky.put_fuel(A)
             elif(which_fuel == 'diesel'):
                 tanky.put_fuel(B)
             current_quantity = tanky.currently_in
+        # We've reached the point of max fuel.
+        return current_quantity
+
+if __name__ == '__main__':
+    sol = Solution()
+    N = 11
+    A = 20
+    B = 2
+    max_fuel = sol.maximizeTheFuel(N, A, B)
+    print(max_fuel)
 
         
         
