@@ -1,7 +1,10 @@
 {
     "[python]": {
         "editor.rulers": [
-            72,
+            {
+                "column":72,
+                "color": "#211121"
+            },
             {
                 "column":79,
                 "color": "#ff9f00"
