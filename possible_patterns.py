@@ -102,16 +102,16 @@ class pattern_finder:
         regex_search_pattern = [f"{key}|" for key in self.pattern_dict.keys()]
         regex_search_pattern = "".join(regex_search_pattern)
         # Removing the last "|" from the string we created, creating
-        # a regex pattern of the form [key1|key2|...|key N].
+        # a regex pattern of the form key1|key2|...|key N.
         regex_search_pattern =\
-            f"[{regex_search_pattern[:len(regex_search_pattern)-1]}]"
+            regex_search_pattern[:len(regex_search_pattern)-1]
         
         return regex_search_pattern
 
     def validate_input(self) -> bool:
         # Creating a search pattern of the form [^key1|..|key N]
         # to find expressions that does not appear in our keys list.
-        validation_pattern = "[^" + self.pattern_from_keys()[1:]
+        validation_pattern = "[^" + self.pattern_from_keys()[1:] + "]"
         unwanted_expressions = re.findall(validation_pattern, self.input,
                                      overlapped=True)
         if unwanted_expressions != None:
@@ -126,6 +126,8 @@ class pattern_finder:
                                      overlapped=True)
         # Validating that there are no characters in our input that
         # are not in our keys list.
+        assert(self.validate_input() == True)
+
     
 
 
