@@ -99,7 +99,7 @@ class pattern_finder:
     def pattern_from_keys(self) -> list[str]:
         # Creating a search pattern for regex from the keys of 
         # our dictionary.
-        regex_search_pattern = [f"{key}|" for key in self.pattern_dict.keys()]
+        regex_search_pattern = [rf"{key}|" for key in self.pattern_dict.keys()]
         regex_search_pattern = "".join(regex_search_pattern)
         # Removing the last "|" from the string we created, creating
         # a regex pattern of the form key1|key2|...|key N.
@@ -120,13 +120,15 @@ class pattern_finder:
             return True 
 
     def find_patterns(self) -> list[str]:
-        regex_search_pattern = self.pattern_from_keys()
-        # Finding all variations of the dict's keys in out input string.
-        matches_of_keys = re.findall(regex_search_pattern, self.input,
-                                     overlapped=True)
         # Validating that there are no characters in our input that
         # are not in our keys list.
         assert(self.validate_input() == True)
+        regex_search_pattern = self.pattern_from_keys()
+        # Finding all variations of the dict's keys in out input string.
+        matches_of_keys_iterator = re.finditer(
+            rf"(?<=({regex_search_pattern}))", self.input, overlapped=True)
+        matches_of_keys_list = [match.group(1) for match in 
+                                matches_of_keys_iterator]
 
     
 
