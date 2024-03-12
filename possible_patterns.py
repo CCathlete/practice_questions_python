@@ -108,21 +108,19 @@ class pattern_finder:
         
         return regex_search_pattern
 
-    def validate_input(self) -> bool:
+    def validate_input(self) -> None:
         # Creating a search pattern of the form [^key1|..|key N]
         # to find expressions that does not appear in our keys list.
-        validation_pattern = "[^" + self.pattern_from_keys()[1:] + "]"
-        unwanted_expressions = re.findall(validation_pattern, self.input,
-                                     overlapped=True)
-        if unwanted_expressions != None:
-            return False
-        else:
-            return True 
+        validation_pattern = "[^" + self.pattern_from_keys() + "]"
+        unwanted_expressions = re.finditer(rf"(?<=({validation_pattern}))", 
+                             self.input, overlapped=True)
+        list_validation = [match.group(1) for match in unwanted_expressions]
+        assert(list_validation == [])
 
     def find_patterns(self) -> list[str]:
         # Validating that there are no characters in our input that
         # are not in our keys list.
-        assert(self.validate_input() == True)
+        self.validate_input()
         regex_search_pattern = self.pattern_from_keys()
         # Finding all variations of the dict's keys in out input string.
         matches_of_keys_iterator = re.finditer(
