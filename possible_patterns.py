@@ -130,7 +130,29 @@ class pattern_finder:
                 return_list +=\
                 list(map(lambda x:pattern + x, self.dig_in(matches_iterator)))
             return return_list
-
+            
+    def findall_overlapped(self, pattern: str) -> list[str]:
+        input_string = self.input
+        # Resulting list.
+        all_possible_substrings = []
+        # Regex must match full string.
+        pattern = rf'^{pattern}$'
+        # Iterate over all chars in a string.
+        for q in range(len(input_string)):
+        # Iterate over the rest of the chars to the right.
+            for w in range(q,len(input_string)):
+                # Currently tested slice.
+                current_slice = input_string[q:w+1]
+                # If there is a full slice match.
+                if re.match(pattern, current_slice):
+                    # Append it to the resulting list.
+                    all_possible_substrings += [current_slice]
+        result = []
+        for key in self.pattern_dict.keys():
+            if key in all_possible_substrings:
+                result += [key]
+        return result
+    
     def find_patterns(self) -> list[str]:
         # Validating that there are no characters in our input that
         # are not in our keys list.
@@ -138,11 +160,8 @@ class pattern_finder:
         regex_search_pattern = self.pattern_from_keys()
         # Finding all variations of the dict's keys in out input string.
         # Note: this is an iterator of match objects.
-        matches_of_keys_iterator = re.finditer(
-            rf"(?<=({regex_search_pattern}))", self.input, overlapped=True)
-        matches_of_keys_list = [
-            match.group(1) for match in matches_of_keys_iterator
-        ]
+        matches_of_keys_list = self.findall_overlapped(
+            self, regex_search_pattern)
         # Converting the list into an iterator of strings.
         match_to_string_iterator = iter(matches_of_keys_list)
         results = self.dig_in(match_to_string_iterator)
@@ -160,3 +179,6 @@ def main() -> None:
     my_pattern_finder = pattern_finder(dict, input)
     results = my_pattern_finder.find_patterns()
     print(results)
+
+if __name__ == "__main__":
+    main()
