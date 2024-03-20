@@ -33,7 +33,6 @@ def max_len_sum_zero(input_array: list[int]) -> int:
     sum = 0
     for i in range(len(input_array)):
         sum += input_array[i]
-        none_zero_sums[sum] = i
         # In a case that sum == 0, the longest subarray with zero sum is
         # the entire array. The second case is when a nun zero sum
         # appears twice. In that case, the difference array has a zero
