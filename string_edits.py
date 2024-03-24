@@ -18,13 +18,14 @@ class StrEditor:
                     source_slice[1:], target_slice[1:])
 # source_slice[0] != target_slice[0]
 # skip s, delete s
-            result1 = recursive_check(source[1:], target) 
+            result1 = recursive_check(source_slice[1:], target_slice) 
 # skip t, add t
-            result2 = recursive_check(source, target[1:]) 
+            result2 = recursive_check(source_slice, target_slice[1:]) 
             if len(result1) <= len(result2):
-                return ['-' + source[0]] + result1
+                return ['-' + source_slice[0]] + result1
             else:
-                return ['+' + target[0]] + result2
+                return ['+' + target_slice[0]] + result2
+        recursive_check(source, target)
                 
 
 def main() -> None:
