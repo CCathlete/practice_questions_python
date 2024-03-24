@@ -25,8 +25,8 @@ class StrEditor:
                 return ['-' + source_slice[0]] + result1
             else:
                 return ['+' + target_slice[0]] + result2
-        recursive_check(source, target)
-                
+        return recursive_check(source, target)
+
 
 def main() -> None:
     source = 'ABCAAJJK'
