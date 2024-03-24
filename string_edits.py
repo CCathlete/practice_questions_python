@@ -22,3 +22,15 @@ class StrEditor:
                 return ['-' + source_slice[0]] + result1
             else:
                 return ['+' + target_slice[0]] + result2
+                
+
+def main() -> None:
+    source = 'ABCAAJJK'
+    target = 'KAAJBA'
+    my_editor = StrEditor(source, target)
+
+    print(my_editor.count_edits())
+
+    
+if __name__ == '__main__':
+    main()
