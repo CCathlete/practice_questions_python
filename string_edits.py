@@ -27,13 +27,39 @@ class StrEditor:
                 return ['+' + target_slice[0]] + result2
         return recursive_check(source, target)
 
+    def fuck_the_recursive_way(self) -> list[str]:
+        source = self.source
+        target = self.target
+        result = []
+        for target_char in target:
+            didnt_find_in_source = True
+            for i, source_char in enumerate(source):
+                if target_char == source_char:
+                    result += [target_char]
+                    if i > 0:
+                        source = source[:i] + source[i+1:]
+                    else:
+                        source = source[i+1:]
+                    # We found in source so:
+                    didnt_find_in_source = False
+                    break
+
+            if didnt_find_in_source:
+                result += [f'+{target_char}']
+
+        for whats_letf in source:
+            result += [f'-{whats_letf}']
+
+        return result
+
 
 def main() -> None:
     source = 'ABCAAJJK'
-    target = 'KAAJBA'
+    target = 'KAAJBAF'
     my_editor = StrEditor(source, target)
 
-    print(my_editor.count_edits())
+    print(f"The recursive solution: {my_editor.count_edits()}\n")
+    print(f"The o(n^2) solution: {my_editor.fuck_the_recursive_way()}\n")
 
     
 if __name__ == '__main__':
